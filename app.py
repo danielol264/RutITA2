@@ -1,5 +1,7 @@
-from flask import Flask, request, url_for, render_template
+from flask import Flask, request, url_for, render_template,redirect, flash
 from flask_mysqldb import MySQL
+from models.modelo import modelo
+from models.User import User
 app = Flask(__name__)
 app.config['MYSQL_HOST']='localhost'
 app.config['MYSQL_USER']='root'
@@ -8,14 +10,25 @@ app.config['MYSQL_DB']='rutita'
 mysql=MySQL(app)
 @app.route("/")
 def index():
-    info= selectSQL('select Nombre,Ap_pat,Ap_Mat from Persona')
-    return render_template('login.html',info=info)
-@app.route("/login")
+    return render_template('login.html')
+@app.route("/login",methods=['POST'])
 def login():
-    usuario=request.form['Usuario']
-    contraseña=request.form['Contraseña']
-    return
+    usuario=User(0,request.form['Usuario'],request.form['Contraseña'])    
+    usuario_logeado=modelo.login(mysql,usuario)
+    if usuario_logeado != None:
+            if usuario_logeado.contraseña:
+                id=usuario_logeado.id
+                return redirect(url_for('home',id=id)) 
+            else:
+                flash('error!!! contraseña incorrecta')
+                return render_template('login.html')
+    else:
+            flash('error!!! usuario no enncontrado')    
+            return render_template('login.html')
 
+@app.route("/home/<id>")
+def home(id):
+     return "<h1>hola</h1>"
 def selectSQL(scrip):
     cursor=mysql.connection.cursor()
     cursor.execute('{}'.format(scrip))
