@@ -1,10 +1,25 @@
-<form action="{{url_for('login')}}" method="post">
-    <input type="text" name="Usuario">
-    <input type="text" name="Contraseña">
-    <select name="Colonia" id="">
-        <option value="">La mexico</option>
-    </select>
-    <button type="submit">Iniciar sesion</button>
-</form>
-
-<h1>{{info}}</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOCORROS</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+{% if messages%}
+{% for message in messages%}
+<div >
+    {{message}}
+</div>
+    
+{%endfor%}
+{%endif%}
+{%endwith%}
+    <form action="/login" method="post">
+        <input type="text" placeholder="Usuario" name="usuario">
+        <input type="text" placeholder="Contraseña" name="contraseña">
+        <button type="submit">Ingresar</button>
+    </form>
+</body>
+</html>
